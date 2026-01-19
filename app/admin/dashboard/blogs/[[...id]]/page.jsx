@@ -299,8 +299,8 @@ function BlogPage() {
                       {
                         formik.values.featuredImage && (
                           <div className="mt-2 flex">
-                            {blogId ? <a target='_blank' href={formik.values.thumbnail.name} className='cursor-pointer  ms-3'>{formik.values.featuredImage.name}</a> : <>
-                              <span className='cursor-pointer'>{formik.values.featuredImage.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
+                            {blogId ? <a target='_blank' href={formik.values.thumbnail?.name} className='cursor-pointer  ms-3'>{formik.values.featuredImage.name}</a> : <>
+                              <span className='cursor-pointer'>{formik.values.featuredImage?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
                                 onClick={() => {
                                   formik.setFieldValue("featuredImage", null);   // clear Formik
                                   if (imgRef.current) imgRef.current.value = ""; // clear input
@@ -357,8 +357,8 @@ function BlogPage() {
                       {formik.values.thumbnail && (
                        
                          <div className="mt-2 flex">
-                            {blogId ? <a target='_blank' href={formik.values.thumbnail.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
-                              <span className='cursor-pointer'>{formik.values.thumbnail.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
+                            {blogId ? <a target='_blank' href={formik.values.thumbnail?.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
+                              <span className='cursor-pointer'>{formik.values.thumbnail?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
                                 onClick={() => {
                                   formik.setFieldValue("thumbnail", null);   // clear Formik
                               if (thumbRef.current) thumbRef.current.value = ""; // clear input
