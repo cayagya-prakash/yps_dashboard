@@ -1,0 +1,56 @@
+.commonbtn {
+  background-color: #00a865 !important;
+  width: 100%;
+  border-radius: 12px;
+  color: #fff;
+  margin-top: 23px;
+}
+
+.bg-sidebar {
+  background-color:#192839;
+  /* background: linear-gradient(to bottom right, #f5faff, #ebf4ff, #e0efff); */
+}
+.background-color {
+  background-color: #e9f4fa;
+}
+.headtxt-color {
+  color: #192839 !important;
+}
+.sidebarmenutext span,
+.icon {
+  color: #fff !important;
+}
+.sidebarmenutext:hover span {
+  color: #192839 !important;
+}
+.sidebarmenutext:hover .icon {
+  color: #192839 !important;
+}
+ol,
+ul {
+  padding-left: 0px !important;
+}
+
+.sidebarmenutext:hover {
+  /* background-color: #192839; */
+}
+.radiusbtn {
+  border-radius: 100% !important;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(100, 98, 98, 0.212);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.116);
+  background-color: #555;
+}
