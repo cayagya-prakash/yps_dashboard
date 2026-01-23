@@ -66,10 +66,11 @@ function JobPage() {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                setLoader(true);
+                
                 const token = localStorage.getItem("token");
                 const data = { ...values }
                 if (!JobId) {
+                    setLoader(true);
                     const res = await createData("", "/career/addJob", data, {
                         withCredentials: true,
                         headers: { authorization: `Bearer ${token}` },
@@ -77,9 +78,11 @@ function JobPage() {
 
                     if (res.data.message === "Job is added scussfully!!!") {
                         toast.success("Job posted successfully");
+                        setLoader(false);
                         router.push("/admin/dashboard/career/joblist");
                     }
                 } else {
+                    setLoader(true);
                     const res = await updateData(`/career/updateJob/${JobId}`, data, {
                         withCredentials: true,
                         headers: { authorization: `Bearer ${token}` },
@@ -87,6 +90,7 @@ function JobPage() {
 
                     if (res?.status === true) {
                         toast.success(res.message);
+                        setLoader(false);
                         router.push("/admin/dashboard/career/joblist");
                     }
                 }
@@ -242,18 +246,12 @@ function JobPage() {
                     {/* Experience */}
                     <div className="col-6 mb-3">
                         <Label>Experience</Label>
-                        <select
-                            className="form-select"
+                         <Input
                             name="experience"
-                            value={formik.values.experience}
+                            placeholder="Enter Experience"
+                           value={formik.values.experience}
                             onChange={formik.handleChange}
-                        >
-                            <option value="">Select</option>
-                            <option>Fresher</option>
-                            <option>0–1 Year</option>
-                            <option>1–3 Years</option>
-                            <option>3+ Years</option>
-                        </select>
+                        />
                         <span className="text-red-500 text-sm">
                             {formik.touched.experience && formik.errors.experience}
                         </span>
