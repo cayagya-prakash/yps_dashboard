@@ -16,13 +16,13 @@ import { toast } from 'sonner'
 import * as Yup from "yup";
 import QuillEditor from '@/components/QuillEditor'
 
-function BlogPage() {
+function BlogEditPage() {
 
   const thumbRef = useRef(null);
   const imgRef = useRef(null);
   const router = useRouter()
   const params = useParams();
-  const blogId = params?.id?.[0] || null;
+  const blogId = params?.id;
   const [loader, setLoader] = useState(false)
   const [showpsd, setpsd] = useState(false)
   const [open, setOpen] = useState(false)
@@ -92,58 +92,44 @@ function BlogPage() {
     validationSchema: vailidation,
     enableReinitialize: true,
     onSubmit: async (values) => {
-  const formData = new FormData();
+      const formData = new FormData();
 
-  formData.append("posttype", values.posttype);
-  formData.append("title", values.title);
-  formData.append("summry", values.summry);
-  formData.append("publishdate", values.publishdate);
-  formData.append("status", values.status);
-  formData.append("category", values.category);
-  formData.append("content", values.content);
-  formData.append("videoLink", values.videoLink);
+      formData.append("posttype", values.posttype);
+      formData.append("title", values.title);
+      formData.append("summry", values.summry);
+      formData.append("publishdate", values.publishdate);
+      formData.append("status", values.status);
+      formData.append("category", values.category);
+      formData.append("content", values.content);
+      formData.append("videoLink", values.videoLink);
 
-  // ✅ ONLY append if real File
-  if (values.featuredImage instanceof File) {
-    formData.append("featuredImage", values.featuredImage);
-  }
+      // ✅ ONLY append if real File
+      if (values.featuredImage instanceof File) {
+        formData.append("featuredImage", values.featuredImage);
+      }
 
-  if (values.thumbnail instanceof File) {
-    formData.append("thumbnail", values.thumbnail);
-  }
+      if (values.thumbnail instanceof File) {
+        formData.append("thumbnail", values.thumbnail);
+      }
 
-  let token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
 
-  if (!blogId) {
-    setLoader(true)
-    const res = await createData("", "/blog/addBlog", formData, {
-      withCredentials: true,
-      headers: { authorization: `Bearer ${token}` },
-    });
+      setLoader(true)
+      const res = await updateData(`/blog/UpdateBlog/${blogId}`, formData, {
+        withCredentials: true,
+        headers: { authorization: `Bearer ${token}` },
+      });
 
-    if (res.status === 200) {
-      toast.success(res.data.message);
-      router.push("/admin/dashboard/blogs/bloglist");
-      setLoader(false)
+      if (res?.message === "Blog updated successfully") {
+        toast.success(res.message);
+        router.push("/admin/dashboard/blogs/bloglist");
+        setLoader(false)
+
+      }
+      setLoader(false);
     }
-
-  } else {
-    setLoader(true)
-    const res = await updateData(`/blog/UpdateBlog/${blogId}`, formData, {
-      withCredentials: true,
-      headers: { authorization: `Bearer ${token}` },
-    });
-
-    if (res?.message === "Blog updated successfully") {
-      toast.success(res.message);
-      router.push("/admin/dashboard/blogs/bloglist");
-      setLoader(false)
-    }
-  }
-  setLoader(false);
-}
   })
-
+  console.log("blogId", blogId)
   const GetBlogbyid = async (token) => {
     try {
       const res = await readData(`/blog/getBlogbyId/${blogId}`, {
@@ -355,16 +341,16 @@ function BlogPage() {
                         }
                       />
                       {formik.values.thumbnail && (
-                       
-                         <div className="mt-2 flex">
-                            {blogId ? <a target='_blank' href={formik.values.thumbnail?.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
-                              <span className='cursor-pointer'>{formik.values.thumbnail?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
-                                onClick={() => {
-                                  formik.setFieldValue("thumbnail", null);   // clear Formik
-                              if (thumbRef.current) thumbRef.current.value = ""; // clear input
-                                }} />
-                            </>}
-                          </div>
+
+                        <div className="mt-2 flex">
+                          {blogId ? <a target='_blank' href={formik.values.thumbnail?.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
+                            <span className='cursor-pointer'>{formik.values.thumbnail?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
+                              onClick={() => {
+                                formik.setFieldValue("thumbnail", null);   // clear Formik
+                                if (thumbRef.current) thumbRef.current.value = ""; // clear input
+                              }} />
+                          </>}
+                        </div>
                       )}
 
                       {formik.touched.thumbnail && formik.errors.thumbnail && (
@@ -384,4 +370,4 @@ function BlogPage() {
   )
 }
 
-export default BlogPage
+export default BlogEditPage

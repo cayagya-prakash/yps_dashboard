@@ -34,7 +34,7 @@ function JobList() {
 
   }
   const handleEdit = async (data) => {
-    await router.push(`/admin/dashboard/career/${data._id}`);
+    await router.push(`/admin/dashboard/career/edit/${data._id}`);
   }
 
   const handleDelete = async (data) => {

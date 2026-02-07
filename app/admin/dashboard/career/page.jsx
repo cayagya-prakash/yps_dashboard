@@ -23,7 +23,6 @@ function JobPage() {
     const [loader, setLoader] = useState(false);
     const [open, setOpen] = useState(false);
     const params = useParams();
-    const JobId = params?.id?.[0] || null;
     /* -------------------- Initial Values -------------------- */
     const initialValues = {
         jobTitle: "",
@@ -66,34 +65,22 @@ function JobPage() {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                
+
                 const token = localStorage.getItem("token");
                 const data = { ...values }
-                if (!JobId) {
-                    setLoader(true);
-                    const res = await createData("", "/career/addJob", data, {
-                        withCredentials: true,
-                        headers: { authorization: `Bearer ${token}` },
-                    });
 
-                    if (res.data.message === "Job is added scussfully!!!") {
-                        toast.success("Job posted successfully");
-                        setLoader(false);
-                        router.push("/admin/dashboard/career/joblist");
-                    }
-                } else {
-                    setLoader(true);
-                    const res = await updateData(`/career/updateJob/${JobId}`, data, {
-                        withCredentials: true,
-                        headers: { authorization: `Bearer ${token}` },
-                    });
+                setLoader(true);
+                const res = await createData("", "/career/addJob", data, {
+                    withCredentials: true,
+                    headers: { authorization: `Bearer ${token}` },
+                });
 
-                    if (res?.status === true) {
-                        toast.success(res.message);
-                        setLoader(false);
-                        router.push("/admin/dashboard/career/joblist");
-                    }
+                if (res.data.message === "Job is added scussfully!!!") {
+                    toast.success("Job posted successfully");
+                    setLoader(false);
+                    router.push("/admin/dashboard/career/joblist");
                 }
+
             } catch (err) {
                 toast.error("Something went wrong");
             } finally {
@@ -102,39 +89,6 @@ function JobPage() {
         },
     });
 
-
-    const GetJobbyid = async (token) => {
-        try {
-            const res = await readData(`/career/getjobById/${JobId}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    'authorization': `Bearer ${token}`
-                },
-            });
-
-            if (res.status === true) {
-                const data = res.job
-                formik.setValues({
-                    ...data,
-                    deadline: data?.deadline ? new Date(data?.deadline) : null,
-                });
-                setLoader(false)
-            }
-        } catch (error) {
-            console.log("errorr", error)
-            setLoader(false)
-        }
-    }
-
-    useEffect(() => {
-        if (JobId) {
-            const fetchData = async () => {
-                const token = localStorage.getItem("token");
-                await GetJobbyid(token);  // ✔️ now state update happens asynchronously
-            };
-            fetchData();
-        }
-    }, [])
 
     return (
         <Card className="w-4xl m-auto mt-5">
@@ -246,10 +200,10 @@ function JobPage() {
                     {/* Experience */}
                     <div className="col-6 mb-3">
                         <Label>Experience</Label>
-                         <Input
+                        <Input
                             name="experience"
                             placeholder="Enter Experience"
-                           value={formik.values.experience}
+                            value={formik.values.experience}
                             onChange={formik.handleChange}
                         />
                         <span className="text-red-500 text-sm">

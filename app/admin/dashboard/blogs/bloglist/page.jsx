@@ -33,7 +33,7 @@ function BlogList() {
 
   }
   const handleEdit = async (data) => {
-    await router.push(`/admin/dashboard/blogs/${data._id}`);
+    await router.push(`/admin/dashboard/blogs/edit/${data._id}`);
   }
 
   const handleDelete = async (data) => {
