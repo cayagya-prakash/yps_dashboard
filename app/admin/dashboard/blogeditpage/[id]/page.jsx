@@ -24,10 +24,7 @@ function BlogEditPage() {
   const params = useParams();
   const blogId = params?.id;
   const [loader, setLoader] = useState(false)
-  const [showpsd, setpsd] = useState(false)
   const [open, setOpen] = useState(false)
-  const [date, setDate] = useState(new Date())
-
   const [initialValues, setInitialValues] = useState({
     posttype: "blog",
     title: "",
@@ -154,218 +151,221 @@ function BlogEditPage() {
   }
 
   useEffect(() => {
-    if (blogId) {
-      const fetchData = async () => {
-        const token = localStorage.getItem("token");
-        await GetBlogbyid(token);  // ✔️ now state update happens asynchronously
-      };
+    if (!blogId) return;
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      await GetBlogbyid(token);  // ✔️ now state update happens asynchronously
+    };
 
-      fetchData();
-    }
-  }, [])
+    fetchData();
+
+  }, [blogId])
 
   return (
     <>
-      <Card className='w-4xl m-auto mt-5' >
-        <CardHeader>
-          <CardTitle className={`text-center text-lg`}>
-            Update Blog
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      {!blogId ? <div className="flex justify-center mt-10">
+        <Spinner />
+      </div> :
+        <Card className='w-4xl m-auto mt-5' >
+          <CardHeader>
+            <CardTitle className={`text-center text-lg`}>
+              Update Blog
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
 
-          <div className='container'>
-            <div className=''>
-              <div className='row'>
-                <div className='col-6 mb-4'>
-                  <Label className='m-2 text-muted'>Title</Label>
-                  <Input placeholder="Enter Title" id="title" name="title" value={formik.values.title} type='text' onChange={formik.handleChange} />
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.title ? formik.errors.title : ""}</span>
-                </div>
-                <div className='col-6'>
-                  <Label className='m-2 text-muted'>Short Summary</Label>
-                  <Input placeholder="Short Summary" id="summry" name="summry" value={formik.values.summry} type='text' onChange={formik.handleChange} />
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.summry ? formik.errors.summry : ""}</span>
-                </div>
-                <div className='col-6'>
-                  <Label className='m-2 text-muted'>Category</Label>
-                  <Input placeholder="Enter Category" id="category" name="category" value={formik.values.category} type='text' onChange={formik.handleChange} />
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.category ? formik.errors.category : ""}</span>
-                </div>
-
-                <div className='col-6'>
-                  <Label className='m-2 text-muted w-full'>Publish Date</Label>
-                  <Popover open={open} onOpenChange={setOpen} className="w-full">
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        id="publishdate"
-                        name="publishdate"
-                        className="w-full justify-between font-normal"
-                      >
-                        {formik.values.publishdate
-                          ? formik.values.publishdate.toLocaleDateString()
-                          : "Select date"}
-                        <ChevronDownIcon />
-                      </Button>
-                    </PopoverTrigger>
-
-                    <PopoverContent className="w-full overflow-hidden p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        captionLayout="dropdown"
-                        className="w-full"
-                        selected={formik.values.publishdate}
-                        onSelect={(value) => {
-                          formik.setFieldValue("publishdate", value);
-                          setOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.phone ? formik.errors.phone : ""}</span>
-                </div>
-                <div className='col-6'>
-                  <Label className='m-2 text-muted'>Status</Label>
-                  <div>
-                    <RadioGroup value={formik.values.status}
-                      onValueChange={(value) => formik.setFieldValue("status", value)} onChange={formik.handleChange} className='d-flex'>
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="draft" id="s1" className='radiusbtn' />
-                        <Label htmlFor="s1">Draft</Label>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="publish" id="s2" className='radiusbtn' />
-                        <Label htmlFor="s2">Publish</Label>
-                      </div>
-
-                    </RadioGroup>
+            <div className='container'>
+              <div className=''>
+                <div className='row'>
+                  <div className='col-6 mb-4'>
+                    <Label className='m-2 text-muted'>Title</Label>
+                    <Input placeholder="Enter Title" id="title" name="title" value={formik.values.title} type='text' onChange={formik.handleChange} />
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.title ? formik.errors.title : ""}</span>
                   </div>
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.status ? formik.errors.status : ""}</span>
-                </div>
-
-                <div className='col-6 mt-2'>
-                  <Label className='m-2 text-muted'>Post Type</Label>
-                  <div>
-                    <RadioGroup value={formik.values.posttype}
-                      onValueChange={(value) => formik.setFieldValue("posttype", value)} onChange={formik.handleChange} className='d-flex'>
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="blog" id="s1" className='radiusbtn' />
-                        <Label htmlFor="s1">Blog</Label>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="video" id="s2" className='radiusbtn' />
-                        <Label htmlFor="s2">Video</Label>
-                      </div>
-
-                    </RadioGroup>
+                  <div className='col-6'>
+                    <Label className='m-2 text-muted'>Short Summary</Label>
+                    <Input placeholder="Short Summary" id="summry" name="summry" value={formik.values.summry} type='text' onChange={formik.handleChange} />
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.summry ? formik.errors.summry : ""}</span>
                   </div>
-                  <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.posttype ? formik.errors.posttype : ""}</span>
+                  <div className='col-6'>
+                    <Label className='m-2 text-muted'>Category</Label>
+                    <Input placeholder="Enter Category" id="category" name="category" value={formik.values.category} type='text' onChange={formik.handleChange} />
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.category ? formik.errors.category : ""}</span>
+                  </div>
 
-                </div>
-                {formik.values.posttype === "blog" ?
-                  <>
+                  <div className='col-6'>
+                    <Label className='m-2 text-muted w-full'>Publish Date</Label>
+                    <Popover open={open} onOpenChange={setOpen} className="w-full">
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          id="publishdate"
+                          name="publishdate"
+                          className="w-full justify-between font-normal"
+                        >
+                          {formik.values.publishdate
+                            ? formik.values.publishdate.toLocaleDateString()
+                            : "Select date"}
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
 
-                    <div className='col-6'>
-                      <Label className='m-2 text-muted'>Featured Image</Label>
+                      <PopoverContent className="w-full overflow-hidden p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown"
+                          className="w-full"
+                          selected={formik.values.publishdate}
+                          onSelect={(value) => {
+                            formik.setFieldValue("publishdate", value);
+                            setOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
 
-                      <Input
-                        id="featuredImage"
-                        name="featuredImage"
-                        className="cursor-pointer"
-                        ref={imgRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          formik.setFieldValue("featuredImage", file);
-                        }}
-                      />
-                      {
-                        formik.values.featuredImage && (
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.phone ? formik.errors.phone : ""}</span>
+                  </div>
+                  <div className='col-6'>
+                    <Label className='m-2 text-muted'>Status</Label>
+                    <div>
+                      <RadioGroup value={formik.values.status}
+                        onValueChange={(value) => formik.setFieldValue("status", value)} onChange={formik.handleChange} className='d-flex'>
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="draft" id="s1" className='radiusbtn' />
+                          <Label htmlFor="s1">Draft</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="publish" id="s2" className='radiusbtn' />
+                          <Label htmlFor="s2">Publish</Label>
+                        </div>
+
+                      </RadioGroup>
+                    </div>
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.status ? formik.errors.status : ""}</span>
+                  </div>
+
+                  <div className='col-6 mt-2'>
+                    <Label className='m-2 text-muted'>Post Type</Label>
+                    <div>
+                      <RadioGroup value={formik.values.posttype}
+                        onValueChange={(value) => formik.setFieldValue("posttype", value)} onChange={formik.handleChange} className='d-flex'>
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="blog" id="s1" className='radiusbtn' />
+                          <Label htmlFor="s1">Blog</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="video" id="s2" className='radiusbtn' />
+                          <Label htmlFor="s2">Video</Label>
+                        </div>
+
+                      </RadioGroup>
+                    </div>
+                    <span className='text-red-500 ms-3 text-sm font-bold'>{formik.touched.posttype ? formik.errors.posttype : ""}</span>
+
+                  </div>
+                  {formik.values.posttype === "blog" ?
+                    <>
+
+                      <div className='col-6'>
+                        <Label className='m-2 text-muted'>Featured Image</Label>
+
+                        <Input
+                          id="featuredImage"
+                          name="featuredImage"
+                          className="cursor-pointer"
+                          ref={imgRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            formik.setFieldValue("featuredImage", file);
+                          }}
+                        />
+                        {
+                          formik.values.featuredImage && (
+                            <div className="mt-2 flex">
+                              {blogId ? <a target='_blank' href={formik.values.thumbnail?.name} className='cursor-pointer  ms-3'>{formik.values.featuredImage.name}</a> : <>
+                                <span className='cursor-pointer'>{formik.values.featuredImage?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
+                                  onClick={() => {
+                                    formik.setFieldValue("featuredImage", null);   // clear Formik
+                                    if (imgRef.current) imgRef.current.value = ""; // clear input
+                                  }} />
+                              </>}
+                            </div>
+                          )}
+                        <span className="text-red-500 ms-3 text-sm font-bold">
+                          {formik.touched.featuredImage ? formik.errors.featuredImage : ""}
+                        </span>
+                      </div>
+                      {/* bind Quill to Formik */}
+                      <div className='col-12 mt-3'>
+                        <Label className='m-2 text-muted'>Blog Content</Label>
+                        <QuillEditor
+                          value={formik.values.content}
+                          onChange={(val) => formik.setFieldValue("content", val)}
+                        />
+                        <span className="text-red-500 ms-3 text-sm font-bold">
+                          {formik.touched.content ? formik.errors.content : ""}
+                        </span>
+                      </div>
+
+                    </>
+                    : formik.values.posttype === "video" ? <>
+                      <div className='col-6'>
+                        <Label className='m-2 text-muted'>Add Url</Label>
+                        <Input
+                          type="url"
+                          name="videoLink"
+
+                          placeholder="Paste YouTube / video link"
+                          value={formik.values.videoLink}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+
+                        {formik.touched.videoLink && formik.errors.videoLink && (
+                          <span className="text-red-500 ms-3 text-sm font-bold">{formik.errors.videoLink}</span>
+                        )}
+                      </div>
+                      <div className='col-6'>
+                        <Label className='m-2 text-muted'>Upload thumbnail</Label>
+                        <Input
+                          type="file"
+                          name="thumbnail"
+                          className="cursor-pointer"
+                          ref={thumbRef}
+                          accept="image/*"
+                          onChange={(e) =>
+                            formik.setFieldValue("thumbnail", e.currentTarget.files[0])
+                          }
+                        />
+                        {formik.values.thumbnail && (
+
                           <div className="mt-2 flex">
-                            {blogId ? <a target='_blank' href={formik.values.thumbnail?.name} className='cursor-pointer  ms-3'>{formik.values.featuredImage.name}</a> : <>
-                              <span className='cursor-pointer'>{formik.values.featuredImage?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
+                            {blogId ? <a target='_blank' href={formik.values.thumbnail?.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
+                              <span className='cursor-pointer'>{formik.values.thumbnail?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
                                 onClick={() => {
-                                  formik.setFieldValue("featuredImage", null);   // clear Formik
-                                  if (imgRef.current) imgRef.current.value = ""; // clear input
+                                  formik.setFieldValue("thumbnail", null);   // clear Formik
+                                  if (thumbRef.current) thumbRef.current.value = ""; // clear input
                                 }} />
                             </>}
                           </div>
                         )}
-                      <span className="text-red-500 ms-3 text-sm font-bold">
-                        {formik.touched.featuredImage ? formik.errors.featuredImage : ""}
-                      </span>
-                    </div>
-                    {/* bind Quill to Formik */}
-                    <div className='col-12 mt-3'>
-                      <Label className='m-2 text-muted'>Blog Content</Label>
-                      <QuillEditor
-                        value={formik.values.content}
-                        onChange={(val) => formik.setFieldValue("content", val)}
-                      />
-                      <span className="text-red-500 ms-3 text-sm font-bold">
-                        {formik.touched.content ? formik.errors.content : ""}
-                      </span>
-                    </div>
 
-                  </>
-                  : formik.values.posttype === "video" ? <>
-                    <div className='col-6'>
-                      <Label className='m-2 text-muted'>Add Url</Label>
-                      <Input
-                        type="url"
-                        name="videoLink"
-
-                        placeholder="Paste YouTube / video link"
-                        value={formik.values.videoLink}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-
-                      {formik.touched.videoLink && formik.errors.videoLink && (
-                        <span className="text-red-500 ms-3 text-sm font-bold">{formik.errors.videoLink}</span>
-                      )}
-                    </div>
-                    <div className='col-6'>
-                      <Label className='m-2 text-muted'>Upload thumbnail</Label>
-                      <Input
-                        type="file"
-                        name="thumbnail"
-                        className="cursor-pointer"
-                        ref={thumbRef}
-                        accept="image/*"
-                        onChange={(e) =>
-                          formik.setFieldValue("thumbnail", e.currentTarget.files[0])
-                        }
-                      />
-                      {formik.values.thumbnail && (
-
-                        <div className="mt-2 flex">
-                          {blogId ? <a target='_blank' href={formik.values.thumbnail?.url} className='cursor-pointer  ms-3'>{formik.values.thumbnail.name}</a> : <>
-                            <span className='cursor-pointer'>{formik.values.thumbnail?.name}</span><Trash2Icon className="text-red-600 ms-2 cursor-pointer"
-                              onClick={() => {
-                                formik.setFieldValue("thumbnail", null);   // clear Formik
-                                if (thumbRef.current) thumbRef.current.value = ""; // clear input
-                              }} />
-                          </>}
-                        </div>
-                      )}
-
-                      {formik.touched.thumbnail && formik.errors.thumbnail && (
-                        <span className="text-red-500 ms-3 text-sm font-bold">{formik.errors.thumbnail}</span>
-                      )}
-                    </div>
-                  </> : ""}
-              </div>
-              <div className='w-50 m-auto'>
-                <Button className='commonbtn' onClick={formik.handleSubmit}>{loader ? <Spinner /> : blogId != undefined ? 'Update Blog' : 'Add Blog'}</Button>
+                        {formik.touched.thumbnail && formik.errors.thumbnail && (
+                          <span className="text-red-500 ms-3 text-sm font-bold">{formik.errors.thumbnail}</span>
+                        )}
+                      </div>
+                    </> : ""}
+                </div>
+                <div className='w-50 m-auto'>
+                  <Button className='commonbtn' onClick={formik.handleSubmit}>{loader ? <Spinner /> : blogId != undefined ? 'Update Blog' : 'Add Blog'}</Button>
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>}
     </>
   )
 }
