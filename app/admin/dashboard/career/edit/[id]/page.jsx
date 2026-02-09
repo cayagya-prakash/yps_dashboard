@@ -140,7 +140,7 @@ function JobPage() {
         <Card className="w-4xl m-auto mt-5">
             <CardHeader>
                 <CardTitle className="text-center text-lg">
-                    Add Job Opening
+                    Update Job Opening
                 </CardTitle>
             </CardHeader>
 

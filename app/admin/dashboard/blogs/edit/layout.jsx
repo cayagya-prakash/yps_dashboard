@@ -1,7 +1,8 @@
 
+
 import React from 'react'
 
-function BlogEcitLayout({ children }) {
+function BlogEditLayout({ children }) {
     return (
         <div className='container'>
 
@@ -11,4 +12,4 @@ function BlogEcitLayout({ children }) {
     )
 }
 
-export default BlogEcitLayout
+export default BlogEditLayout
