@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Edit, Edit2Icon, Edit3Icon, EditIcon, Trash2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
+import BlogMoadal from './blogviewmodal';
 
 function BlogList() {
   const router = useRouter()
   const [loader, setLoader] = useState(false)
   const [rows, setRows] = useState([]);
-
+  const [blogId, setBlogId] = useState(null)
+  const [open, setOpen] = useState(false)
   const GetBlog = async (token) => {
     setLoader(true)
     try {
@@ -33,9 +35,14 @@ function BlogList() {
 
   }
   const handleEdit = async (data) => {
-    await router.push(`/admin/dashboard/blogeditpage/${data._id}`);
+    setBlogId(data._id)
+    setOpen(true)
+    // await router.push(`/admin/dashboard/blogeditpage/${data._id}`);
   }
-
+  const handleCloseView = () => {
+    setOpen(false);
+    setBlogId(null);
+  };
   const handleDelete = async (data) => {
     const token = localStorage.getItem("token");
     const res = await deleteData(`/blog/deleteBlog/${data._id}`, {
@@ -44,76 +51,76 @@ function BlogList() {
         'authorization': `Bearer ${token}`
       },
     });
-    if(res.status === true){
+    if (res.status === true) {
       GetBlog(token)
     }
   }
 
   const truncate = (text, max = 25) =>
-  text && text.length > max ? text.slice(0, max) + "..." : text;
+    text && text.length > max ? text.slice(0, max) + "..." : text;
 
- const columns = [
-     {
-    field: "actions",
-    headerName: "Actions",
-    width: 120,
-    sortable: false,
-    renderCell: (params) => (
-      <Stack direction="row" spacing={2} className="mt-3">
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => handleEdit(params.row)}
-        >
-          <Edit2Icon className="text-[#192839fc]" />
-        </Button>
+  const columns = [
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 120,
+      sortable: false,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={2} className="mt-3">
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleEdit(params.row)}
+          >
+            <Edit2Icon className="text-[#192839fc]" />
+          </Button>
 
-        <Button
-          variant="outlined"
-          color="error"
-          size="small"
-          onClick={() => handleDelete(params.row)}
-        >
-          <Trash2Icon className="text-[#192839fc]" />
-        </Button>
-      </Stack>
-    ),
-  },
-  { field: "id", headerName: "ID", width: 80 },
-  { field: "posttype", headerName: "Post Type", width: 120 },
-  { field: "title", headerName: "Title", width: 200, renderCell: (params) => truncate(params.row.title, 10),},
-  { field: "summry", headerName: "Summary", width: 220 ,  renderCell: (params) => truncate(params.row.summry, 20),},
-  {
-    field: "publishdate",
-    headerName: "Publish Date",
-    width: 150,
-   
-  },
-  { field: "status", headerName: "Status", width: 120 },
-  { field: "category", headerName: "Category", width: 150 },
-  {
-    field: "featuredImage",
-    headerName: "Featured Image",
-    width: 160,
-    renderCell: (params) =>
-      params.row.featuredImage ? "Uploaded" : "—",
-  },
-  {
-    field: "videoLink",
-    headerName: "Video Link",
-    width: 180,
-    renderCell: (params) =>
-      params.row.videoLink ? params.row.videoLink : "—",
-  },
-  {
-    field: "thumbnail",
-    headerName: "Thumbnail",
-    width: 140,
-    renderCell: (params) =>
-      params.row.thumbnail ? "Uploaded" : "—",
-  },
- 
-];
+          <Button
+            variant="outlined"
+            color="error"
+            size="small"
+            onClick={() => handleDelete(params.row)}
+          >
+            <Trash2Icon className="text-[#192839fc]" />
+          </Button>
+        </Stack>
+      ),
+    },
+    { field: "id", headerName: "ID", width: 80 },
+    { field: "posttype", headerName: "Post Type", width: 120 },
+    { field: "title", headerName: "Title", width: 200, renderCell: (params) => truncate(params.row.title, 10), },
+    { field: "summry", headerName: "Summary", width: 220, renderCell: (params) => truncate(params.row.summry, 20), },
+    {
+      field: "publishdate",
+      headerName: "Publish Date",
+      width: 150,
+
+    },
+    { field: "status", headerName: "Status", width: 120 },
+    { field: "category", headerName: "Category", width: 150 },
+    {
+      field: "featuredImage",
+      headerName: "Featured Image",
+      width: 160,
+      renderCell: (params) =>
+        params.row.featuredImage ? "Uploaded" : "—",
+    },
+    {
+      field: "videoLink",
+      headerName: "Video Link",
+      width: 180,
+      renderCell: (params) =>
+        params.row.videoLink ? params.row.videoLink : "—",
+    },
+    {
+      field: "thumbnail",
+      headerName: "Thumbnail",
+      width: 140,
+      renderCell: (params) =>
+        params.row.thumbnail ? "Uploaded" : "—",
+    },
+
+  ];
 
 
   const paginationModel = { page: 0, pageSize: 10 };
@@ -144,6 +151,7 @@ function BlogList() {
           />
         </Paper>
       }
+      <BlogMoadal blogId={blogId} setOpenView={setOpen} openView={open} handleCloseView={handleCloseView} GetBlog={GetBlog}/>
     </div>
   )
 }
