@@ -36,7 +36,7 @@ function JobList() {
 
   }
    const handleEdit = async (data) => {
-    setJobId(data._id)
+    setJobId(data.id)
     setOpen(true)
   
   }
@@ -47,7 +47,7 @@ function JobList() {
 console.log("jobId",jobId)
   const handleDelete = async (data) => {
     const token = localStorage.getItem("token");
-    const res = await deleteData(`/career/deleteJob/${data._id}`, {
+    const res = await deleteData(`/career/deleteJob/${data.id}`, {
       headers: {
         "Content-Type": "application/json",
         'authorization': `Bearer ${token}`

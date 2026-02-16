@@ -123,6 +123,19 @@ function BlogMoadal({ openView, setOpenView, blogId, selectedApplication, handle
                 toast.success(res.message);
                 GetBlog(token)
                 // router.push("/admin/dashboard/blogs/bloglist");
+                setInitialValues({
+                    posttype: "blog",
+                    title: "",
+                    summry: "",
+                    publishdate: new Date(),
+                    status: "",
+                    category: "",
+                    featuredImage: null,
+                    featuredImageUrl: "",
+                    content: "",
+                    videoLink: "",
+                    thumbnail: null,
+                })
                 setOpenView(false)
                 setLoader(false)
 
@@ -164,6 +177,7 @@ function BlogMoadal({ openView, setOpenView, blogId, selectedApplication, handle
         fetchData();
 
     }, [blogId])
+  
     return (
         <div className='w-full'>
             <Dialog open={openView} onOpenChange={setOpenView}>

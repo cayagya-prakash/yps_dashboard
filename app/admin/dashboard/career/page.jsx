@@ -74,8 +74,7 @@ function JobPage() {
                     withCredentials: true,
                     headers: { authorization: `Bearer ${token}` },
                 });
-
-                if (res.data.message === "Job is added scussfully!!!") {
+                if (res.data.status === true) {
                     toast.success("Job posted successfully");
                     setLoader(false);
                     router.push("/admin/dashboard/career/joblist");

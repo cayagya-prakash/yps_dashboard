@@ -24,7 +24,7 @@ function BlogList() {
           'authorization': `Bearer ${token}`
         },
       });
-      if (res.message === 'Get Blogs Scussfully!!!') {
+      if (res.status === true) {
         setRows(res.blogs)
         setLoader(false)
       }
@@ -35,9 +35,8 @@ function BlogList() {
 
   }
   const handleEdit = async (data) => {
-    setBlogId(data._id)
+    setBlogId(data.id)
     setOpen(true)
-    // await router.push(`/admin/dashboard/blogeditpage/${data._id}`);
   }
   const handleCloseView = () => {
     setOpen(false);
@@ -45,7 +44,7 @@ function BlogList() {
   };
   const handleDelete = async (data) => {
     const token = localStorage.getItem("token");
-    const res = await deleteData(`/blog/deleteBlog/${data._id}`, {
+    const res = await deleteData(`/blog/deleteBlog/${data.id}`, {
       headers: {
         "Content-Type": "application/json",
         'authorization': `Bearer ${token}`
